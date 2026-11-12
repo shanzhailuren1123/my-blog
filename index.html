@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>巩致麟的个人作品展示主页</title>
+<style>
+/* ========== 设计语言：参考 Apple 官网 ==========
+   大字号标题 + 大面积留白 + 黑白灰底色 + 一点 Apple 蓝点缀，
+   顶部毛玻璃吸顶导航，浅灰与纯黑区块交替。 */
+:root {
+    --text: #1d1d1f;          /* 主文字色 */
+    --gray: #6e6e73;          /* 次要文字色 */
+    --light-bg: #f5f5f7;      /* 浅灰区块底色 */
+    --accent: #0071e3;        /* Apple 蓝 */
+    --accent-hover: #0077ed;
+    --dark-bg: #000;          /* 纯黑区块底色 */
+}
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+html {
+    scroll-behavior: smooth;  /* 锚点跳转平滑滚动 */
+}
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text",
+        "Helvetica Neue", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+    line-height: 1.6;
+    color: var(--text);
+    background: #fbfbfd;
+    -webkit-font-smoothing: antialiased;
+}
+
+/* ========== 顶部导航：毛玻璃吸顶，48px 细栏 ========== */
+header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(251, 251, 253, 0.8);   /* 半透明底色 */
+    backdrop-filter: saturate(180%) blur(20px);  /* 毛玻璃效果 */
+    -webkit-backdrop-filter: saturate(180%) blur(20px);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+}
+nav {
+    max-width: 1000px;
+    margin: 0 auto;
+    height: 48px;
+    display: flex;              /* Flex 横向排列品牌名与菜单 */
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 22px;
+}
+nav .brand {
+    font-size: 17px;
+    font-weight: 600;
+    color: var(--text);
+    text-decoration: none;
+    letter-spacing: 0.02em;
+}
+nav ul {
+    display: flex;
+    list-style: none;
+    gap: 8px;
+}
+nav a.nav-item {
+    color: var(--text);
+    text-decoration: none;
+    font-size: 13px;
+    padding: 6px 12px;
+    border-radius: 980px;       /* 胶囊形圆角 */
+    transition: background-color 0.3s;
+}
+/* JS 切换的高亮类：鼠标移入导航项时添加，移出时移除 */
+.active {
+    background-color: rgba(0, 0, 0, 0.06);
+}
+
+/* ========== 个人简介区：大字号标题 + 大留白 ========== */
+.banner {
+    text-align: center;
+    padding: 96px 20px 88px;
+    background: #fbfbfd;
+}
+.banner img {
+    width: 160px;
+    height: 160px;
+    border-radius: 50%;          /* 头像圆形裁切 */
+    object-fit: cover;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.14);
+}
+.banner h1 {
+    margin-top: 28px;
+    font-size: 56px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+}
+.banner .motto {
+    margin-top: 14px;
+    font-size: 21px;
+    color: var(--gray);
+}
+.banner .tags {
+    margin-top: 20px;
+    font-size: 14px;
+    color: var(--accent);
+    letter-spacing: 0.12em;
+}
+
+/* ========== 区块标题：大字号居中 ========== */
+section h2 {
+    font-size: 40px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    text-align: center;
+    line-height: 1.15;
+}
+.section-sub {
+    margin-top: 12px;
+    text-align: center;
+    font-size: 17px;
+    color: var(--gray);
+}
+
+/* ========== 关于我：居中窄栏 ========== */
+#about {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 88px 22px;
+}
+#about p {
+    margin-top: 20px;
+    font-size: 17px;
+    line-height: 1.8;
+    color: #333336;
+}
+
+/* ========== 作品展示：纯黑区块 + 白色卡片 ========== */
+#works {
+    background: var(--dark-bg);
+    padding: 88px 0 96px;
+}
+#works h2 {
+    color: #f5f5f7;
+}
+#works .section-sub {
+    color: #a1a1a6;
+}
+.work-wrap {
+    max-width: 1020px;
+    margin: 48px auto 0;
+    padding: 0 22px;
+    display: flex;              /* Flex 多行多列布局 */
+    flex-wrap: wrap;            /* 卡片过多时自动换行 */
+    justify-content: center;
+    gap: 24px;
+}
+.card {
+    width: 312px;
+    background: #fff;
+    border-radius: 18px;        /* 大圆角 */
+    box-shadow: 0 4px 20px rgba(255, 255, 255, 0.08);
+    overflow: hidden;
+    transition: transform 0.35s ease, box-shadow 0.35s ease;  /* 悬浮过渡 */
+}
+.card:hover {
+    transform: translateY(-6px) scale(1.02);   /* 悬浮上浮并平滑放大 */
+    box-shadow: 0 16px 40px rgba(255, 255, 255, 0.16);
+}
+.card img {
+    width: 100%;
+    height: 195px;
+    object-fit: cover;
+    display: block;
+}
+.card-text {
+    padding: 20px 20px 24px;
+}
+.card-text h3 {
+    font-size: 19px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    color: var(--text);
+}
+.card-text p {
+    margin-top: 8px;
+    font-size: 14px;
+    line-height: 1.65;
+    color: var(--gray);
+}
+.card-text .tag {
+    display: inline-block;
+    margin-top: 14px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--accent);
+    background: rgba(0, 113, 227, 0.08);
+    border-radius: 980px;
+    padding: 4px 12px;
+}
+
+/* ========== 留言表单：浅灰底 + 胶囊按钮 ========== */
+#contact {
+    background: var(--light-bg);
+    padding: 88px 22px 96px;
+}
+.msg-form {
+    max-width: 600px;
+    margin: 40px auto 0;
+}
+.msg-form label {
+    display: block;
+    margin: 18px 0 6px;
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text);
+}
+.msg-form input,
+.msg-form textarea {
+    width: 100%;
+    padding: 13px 16px;
+    border: 1px solid #d2d2d7;
+    border-radius: 12px;        /* 输入框大圆角 */
+    background: #fff;
+    font-size: 15px;
+    font-family: inherit;
+    color: var(--text);
+}
+.msg-form input:focus,
+.msg-form textarea:focus {
+    border-color: var(--accent);   /* 聚焦时蓝色描边 */
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(0, 113, 227, 0.15);
+}
+.msg-form textarea {
+    height: 120px;
+    resize: vertical;
+}
+.msg-form button {
+    display: block;
+    margin: 28px auto 0;
+    padding: 12px 36px;
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    border-radius: 980px;       /* 胶囊形提交按钮 */
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+.msg-form button:hover {
+    background: var(--accent-hover);
+}
+
+/* ========== 返回顶部按钮：圆形悬浮按钮 ========== */
+#topBtn {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;         /* 圆形按钮 */
+    background: rgba(29, 29, 31, 0.85);
+    color: #fff;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    display: none;              /* 默认隐藏，滚动超过 200px 后由 JS 显示 */
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+}
+
+/* ========== 页脚：浅灰小字 ========== */
+footer {
+    background: var(--light-bg);
+    padding: 28px 22px 32px;
+    text-align: center;
+    font-size: 13px;
+    line-height: 2;
+    color: var(--gray);
+}
+footer a {
+    color: var(--accent);
+    text-decoration: none;
+}
+
+/* ========== 窄屏适配 ========== */
+@media (max-width: 640px) {
+    .banner h1 {
+        font-size: 40px;
+    }
+    .banner .motto {
+        font-size: 18px;
+    }
+    section h2 {
+        font-size: 32px;
+    }
+    nav ul {
+        gap: 0;
+    }
+    .card {
+        width: 100%;
+    }
+}
+</style>
+</head>
+<body>
+
+<!-- 页面头部：品牌名 + 导航栏（毛玻璃吸顶） -->
+<header>
+    <nav>
+        <a href="#home" class="brand">巩致麟</a>
+        <ul>
+            <li><a href="#home" class="nav-item">首页</a></li>
+            <li><a href="#about" class="nav-item">关于我</a></li>
+            <li><a href="#works" class="nav-item">作品展示</a></li>
+            <li><a href="#contact" class="nav-item">留言联系</a></li>
+        </ul>
+    </nav>
+</header>
+
+<!-- 个人简介区：头像 + 大字号姓名 + 一句话简介 -->
+<section class="banner" id="home">
+    <img src="images/avatar.jpg" alt="巩致麟个人头像">
+    <h1>巩致麟</h1>
+    <p class="motto">用镜头和代码讲故事的数字媒体学生。</p>
+    <p class="tags">视听语言 · AI 视频 · 三维建模 · Web 前端</p>
+</section>
+
+<!-- 关于我 -->
+<main>
+    <section id="about">
+        <h2>关于我</h2>
+        <p>我是山东女子学院数字媒体技术（专升本）2601 班的学生，学号 260956030112。学习方向是视听语言与影像创作、AI 视频生成（ComfyUI）、三维建模（3ds Max）和 Web 前端开发，正在把课堂作业一件件做成拿得出手的作品。</p>
+        <p>兴趣爱好：看电影、追现场演出、科幻与宇航员题材，课余时间喜欢健身和弹吉他。</p>
+    </section>
+
+    <!-- 作品展示：Flex 卡片布局（纯黑区块） -->
+    <section id="works">
+        <h2>作品展示</h2>
+        <p class="section-sub">每一件，都是课堂作业长成的作品。</p>
+        <div class="work-wrap">
+
+            <!-- 卡片 1：宇航员短片《回望》 -->
+            <article class="card">
+                <img src="images/work1.jpg" alt="宇航员短片《回望》剧照">
+                <div class="card-text">
+                    <h3>《回望》——宇航员主题 AI 短片</h3>
+                    <p>94 秒短片：宇航员重返月球，寻找十年前留在月面的一句话，最后发现答案一直在面罩的倒映里。</p>
+                    <span class="tag">视听语言 · AI 短片</span>
+                </div>
+            </article>
+
+            <!-- 卡片 2：科幻漫剧《拾光计划》 -->
+            <article class="card">
+                <img src="images/work3.jpg" alt="《拾光计划》广寒站外景">
+                <div class="card-text">
+                    <h3>《拾光计划》——科幻漫剧</h3>
+                    <p>延展《回望》世界观的科幻漫剧。2046 年，宇航员林望重返月球，执行航天遗存回收任务，循着清单上的坐标，寻找十年前失踪的沈月遥。</p>
+                    <span class="tag">漫剧 · 科幻</span>
+                </div>
+            </article>
+
+            <!-- 卡片 3：运动镜头作业《清晨的图书馆》 -->
+            <article class="card">
+                <img src="images/work2.jpg" alt="《清晨的图书馆》剧照">
+                <div class="card-text">
+                    <h3>《清晨的图书馆》——运动镜头短片</h3>
+                    <p>30 秒短片作业：推、拉、摇、移四种运动镜头，讲述主角林晚清晨 6 点 48 分走进图书馆的故事。</p>
+                    <span class="tag">视听语言 · 运动镜头</span>
+                </div>
+            </article>
+
+            <!-- 卡片 4：UI 设计作业 -->
+            <article class="card">
+                <img src="images/work4.jpg" alt="登录对话框 UI 设计图">
+                <div class="card-text">
+                    <h3>登录对话框 UI 设计</h3>
+                    <p>UI 设计课作业：严格按教材步骤制作的登录对话框 PSD，分图层可编辑，450×200 对话框，圆角输入框与渐变按钮。</p>
+                    <span class="tag">UI 设计 · Photoshop</span>
+                </div>
+            </article>
+
+            <!-- 卡片 5：三维建模作业《铁艺挂钟》 -->
+            <article class="card">
+                <img src="images/work5.jpg" alt="铁艺挂钟 3D 渲染图">
+                <div class="card-text">
+                    <h3>铁艺挂钟——三维建模</h3>
+                    <p>3ds Max 建模练习：表身、刻度与数字用参数化建模搭建，铁艺卷涡装饰手工调整，练的是结构化建模与分件思路。</p>
+                    <span class="tag">三维建模 · 3ds Max</span>
+                </div>
+            </article>
+
+        </div>
+    </section>
+
+    <!-- 留言联系表单 -->
+    <section id="contact">
+        <h2>给我留言</h2>
+        <p class="section-sub">有合作想法，或者单纯打个招呼，都可以。</p>
+        <form id="myForm" class="msg-form" action="#" method="post">
+            <label for="username">姓名</label>
+            <input type="text" id="username" name="username" placeholder="请输入您的姓名">
+            <label for="email">邮箱</label>
+            <input type="text" id="email" name="email" placeholder="请输入您的邮箱">
+            <label for="msg">留言</label>
+            <textarea id="msg" name="msg" placeholder="想对我说点什么？"></textarea>
+            <button type="submit">提交留言</button>
+        </form>
+    </section>
+</main>
+
+<!-- 返回顶部按钮：滚动超过 200px 后显示 -->
+<button id="topBtn" type="button" aria-label="回到顶部">↑</button>
+
+<!-- 页脚：联系信息与版权 -->
+<footer>
+    <p>联系邮箱：<a href="mailto:szlr12138@gmail.com">szlr12138@gmail.com</a>　|　山东女子学院 数字媒体技术（专升本）2601 班</p>
+    <p>&copy; 2026 巩致麟 版权所有　|　学号：260956030112</p>
+</footer>
+
+<script>
+// ========== 交互 1：导航高亮（鼠标移入切换 class，移出取消） ==========
+var navItems = document.querySelectorAll('.nav-item');
+navItems.forEach(function (item) {
+    item.addEventListener('mouseover', function () {
+        this.classList.add('active');
+    });
+    item.addEventListener('mouseout', function () {
+        this.classList.remove('active');
+    });
+});
+
+// ========== 交互 2：返回顶部（滚动超过 200px 显示，点击平滑回顶） ==========
+var topBtn = document.getElementById('topBtn');
+window.addEventListener('scroll', function () {
+    if (window.scrollY > 200) {
+        topBtn.style.display = 'block';
+    } else {
+        topBtn.style.display = 'none';
+    }
+});
+topBtn.addEventListener('click', function () {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+});
+
+// ========== 交互 3：表单非空验证（姓名、邮箱为空则提示并阻止提交） ==========
+var myForm = document.getElementById('myForm');
+myForm.addEventListener('submit', function (e) {
+    var uname = document.getElementById('username').value.trim();
+    var mail = document.getElementById('email').value.trim();
+    if (uname === '' || mail === '') {
+        alert('姓名和邮箱不能为空！');
+        e.preventDefault();
+    }
+});
+</script>
+
+</body>
+</html>
