@@ -15,6 +15,7 @@
     --accent: #0071e3;        /* Apple 蓝 */
     --accent-hover: #0077ed;
     --dark-bg: #000;          /* 纯黑区块底色 */
+    --ease: cubic-bezier(0.22, 1, 0.36, 1);  /* 全站统一缓动曲线 */
 }
 * {
     margin: 0;
@@ -77,18 +78,24 @@ nav a.nav-item {
     background-color: rgba(0, 0, 0, 0.06);
 }
 
-/* ========== 个人简介区：大字号标题 + 大留白 ========== */
+/* ========== 个人简介区：大字号标题 + 大留白 + 顶部柔光 ========== */
 .banner {
     text-align: center;
     padding: 96px 20px 88px;
-    background: #fbfbfd;
+    background: radial-gradient(640px 320px at 50% 0%, rgba(0, 113, 227, 0.08), transparent 70%), #fbfbfd;
+    animation: bannerIn 0.7s var(--ease) both;  /* 首屏淡入上移 */
+}
+@keyframes bannerIn {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: none; }
 }
 .banner img {
     width: 160px;
     height: 160px;
     border-radius: 50%;          /* 头像圆形裁切 */
     object-fit: cover;
-    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.14);
+    border: 4px solid #fff;      /* 头像白圈 */
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.14), 0 0 0 1px rgba(0, 0, 0, 0.04);
 }
 .banner h1 {
     margin-top: 28px;
@@ -107,6 +114,17 @@ nav a.nav-item {
     font-size: 14px;
     color: var(--accent);
     letter-spacing: 0.12em;
+}
+
+/* ========== 区块滚动淡入（JS 用 IntersectionObserver 加 visible 类） ========== */
+.reveal {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.6s var(--ease), transform 0.6s var(--ease);
+}
+.reveal.visible {
+    opacity: 1;
+    transform: none;
 }
 
 /* ========== 区块标题：大字号居中 ========== */
@@ -162,7 +180,8 @@ section h2 {
     border: none;
     box-shadow: none;           /* 去掉卡片阴影，不描边框 */
     overflow: hidden;
-    transition: transform 0.35s ease;  /* 只做缩放过渡 */
+    transition: transform 0.35s var(--ease);  /* 只做缩放过渡 */
+    will-change: transform;
 }
 .card:nth-child(odd) {
     align-self: flex-start;     /* 奇数卡片靠左 */
@@ -186,6 +205,10 @@ section h2 {
     object-fit: cover;
     display: block;
     border-radius: 18px;        /* 只有图片保留大圆角 */
+    transition: transform 0.5s var(--ease);
+}
+.card:hover img {
+    transform: scale(1.04);     /* 悬浮时只放大图片本身 */
 }
 .card-text {
     padding: 20px 4px 0;        /* 文字区贴底、无内框 */
@@ -239,12 +262,13 @@ section h2 {
     font-size: 15px;
     font-family: inherit;
     color: var(--text);
+    transition: border-color 0.3s var(--ease), box-shadow 0.3s var(--ease);
 }
 .msg-form input:focus,
 .msg-form textarea:focus {
     border-color: var(--accent);   /* 聚焦时蓝色描边 */
     outline: none;
-    box-shadow: 0 0 0 3px rgba(0, 113, 227, 0.15);
+    box-shadow: 0 0 0 4px rgba(0, 113, 227, 0.18);  /* 聚焦外发光 */
 }
 .msg-form textarea {
     height: 120px;
@@ -260,10 +284,16 @@ section h2 {
     border-radius: 980px;       /* 胶囊形提交按钮 */
     font-size: 16px;
     cursor: pointer;
-    transition: background-color 0.3s;
+    box-shadow: 0 6px 20px rgba(0, 113, 227, 0.35);
+    transition: background-color 0.3s var(--ease), transform 0.15s var(--ease), box-shadow 0.3s var(--ease);
 }
 .msg-form button:hover {
     background: var(--accent-hover);
+    transform: translateY(-1px);
+    box-shadow: 0 10px 24px rgba(0, 113, 227, 0.4);
+}
+.msg-form button:active {
+    transform: scale(0.97);     /* 按下时微缩，有按下去的手感 */
 }
 
 /* ========== 返回顶部按钮：圆形悬浮按钮 ========== */
@@ -281,6 +311,11 @@ section h2 {
     cursor: pointer;
     display: none;              /* 默认隐藏，滚动超过 200px 后由 JS 显示 */
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+    transition: transform 0.2s var(--ease), background-color 0.2s var(--ease);
+}
+#topBtn:hover {
+    transform: scale(1.06);
+    background: rgba(29, 29, 31, 1);
 }
 
 /* ========== 页脚：浅灰小字 ========== */
@@ -291,6 +326,7 @@ footer {
     font-size: 13px;
     line-height: 2;
     color: var(--gray);
+    border-top: 1px solid rgba(0, 0, 0, 0.06);  /* 与表单区细线分隔 */
 }
 footer a {
     color: var(--accent);
@@ -317,6 +353,21 @@ footer a {
     }
     .card.in-center {
         transform: scale(1.03); /* 窄屏中央放大轻一点 */
+    }
+}
+
+/* ========== 减弱动效：用户选了减弱动效时全部动效关闭，内容直接显示 ========== */
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation: none !important;
+        transition: none !important;
+    }
+    html {
+        scroll-behavior: auto;
+    }
+    .reveal {
+        opacity: 1;
+        transform: none;
     }
 }
 </style>
@@ -476,6 +527,25 @@ if ('IntersectionObserver' in window) {
     }, { rootMargin: '-42% 0px -42% 0px' });  /* 只在屏幕中央一条带子里触发 */
     cards.forEach(function (card) {
         centerObserver.observe(card);
+    });
+}
+
+// ========== 交互 5（增强效果）：区块滚动淡入 ==========
+var revealEls = document.querySelectorAll('#about, #contact');
+if ('IntersectionObserver' in window) {
+    revealEls.forEach(function (el) {
+        el.classList.add('reveal');  /* 有 Observer 才加隐藏类，不支持时内容直接显示 */
+    });
+    var revealObserver = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+                revealObserver.unobserve(entry.target);
+            }
+        });
+    }, { rootMargin: '0px 0px -10% 0px' });
+    revealEls.forEach(function (el) {
+        revealObserver.observe(el);
     });
 }
 </script>
