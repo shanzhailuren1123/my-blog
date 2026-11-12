@@ -158,11 +158,11 @@ section h2 {
 }
 .card {
     width: min(600px, 100%);
-    background: #fff;
-    border-radius: 18px;        /* 大圆角 */
-    box-shadow: 0 4px 20px rgba(255, 255, 255, 0.08);
+    background: transparent;    /* 无感边框：卡片本身透明、无背景 */
+    border: none;
+    box-shadow: none;           /* 去掉卡片阴影，不描边框 */
     overflow: hidden;
-    transition: transform 0.35s ease, box-shadow 0.35s ease;  /* 悬浮过渡 */
+    transition: transform 0.35s ease;  /* 只做缩放过渡 */
 }
 .card:nth-child(odd) {
     align-self: flex-start;     /* 奇数卡片靠左 */
@@ -172,12 +172,10 @@ section h2 {
 }
 .card:hover {
     transform: translateY(-6px) scale(1.02);   /* 悬浮上浮并平滑放大 */
-    box-shadow: 0 16px 40px rgba(255, 255, 255, 0.16);
 }
 /* 卡片滑到屏幕中央时放大（JS 用 IntersectionObserver 加 in-center 类） */
 .card.in-center {
     transform: scale(1.05);
-    box-shadow: 0 20px 48px rgba(255, 255, 255, 0.2);
 }
 .card.in-center:hover {
     transform: scale(1.07) translateY(-4px);
@@ -187,29 +185,30 @@ section h2 {
     height: 240px;
     object-fit: cover;
     display: block;
+    border-radius: 18px;        /* 只有图片保留大圆角 */
 }
 .card-text {
-    padding: 20px 20px 24px;
+    padding: 20px 4px 0;        /* 文字区贴底、无内框 */
 }
 .card-text h3 {
     font-size: 19px;
     font-weight: 600;
     letter-spacing: -0.01em;
-    color: var(--text);
+    color: #f5f5f7;             /* 浅色标题，配纯黑底 */
 }
 .card-text p {
     margin-top: 8px;
     font-size: 14px;
     line-height: 1.65;
-    color: var(--gray);
+    color: #a1a1a6;             /* 浅灰正文 */
 }
 .card-text .tag {
     display: inline-block;
     margin-top: 14px;
     font-size: 12px;
     font-weight: 600;
-    color: var(--accent);
-    background: rgba(0, 113, 227, 0.08);
+    color: #2997ff;             /* 深色底上用亮一点的蓝 */
+    background: rgba(41, 151, 255, 0.16);
     border-radius: 980px;
     padding: 4px 12px;
 }
